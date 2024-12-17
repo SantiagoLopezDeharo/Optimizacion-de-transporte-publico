@@ -22,7 +22,7 @@ public class Main {
         Problem<IntegerSolution> problem = new ParadasProblem();
 
         // Step 2: Configure the operators
-        @SuppressWarnings("rawtypes")
+        @SuppressWarnings({ "rawtypes", "unchecked" })
         CrossoverOperator<IntegerSolution> crossover = new TwoPointCrossover(0.75); // 75% crossover probability
         MutationOperator<IntegerSolution> mutation = new IntegerPolynomialMutation(0.01, 9); // 0.01% mutation probability
         SelectionOperator<List<IntegerSolution>, IntegerSolution> selection = new BinaryTournamentSelection<>();
