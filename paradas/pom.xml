@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <groupId>com.paradas</groupId>
+    <artifactId>paradas</artifactId>
+    <version>1.0-SNAPSHOT</version>
+
+    <properties>
+        <maven.compiler.source>17</maven.compiler.source>
+        <maven.compiler.target>17</maven.compiler.target>
+    </properties>
+
+        <dependencies>
+
+        <dependency>
+            <groupId>org.uma.jmetal</groupId>
+            <artifactId>jmetal-experimental</artifactId>
+            <version>5.11</version>
+        </dependency>
+
+
+        <dependency>
+            <groupId>org.uma.jmetal</groupId>
+            <artifactId>jmetal-example</artifactId>
+            <version>5.11</version>
+        </dependency>
+
+
+        <dependency>
+            <groupId>org.uma.jmetal</groupId>
+            <artifactId>jmetal-auto</artifactId>
+            <version>6.6</version>
+        </dependency>
+
+
+        <dependency>
+            <groupId>org.uma.jmetal</groupId>
+            <artifactId>jmetal-lab</artifactId>
+            <version>6.6</version>
+        </dependency>
+
+
+        <dependency>
+            <groupId>org.uma.jmetal</groupId>
+            <artifactId>jmetal-problem</artifactId>
+            <version>6.6</version>
+        </dependency>
+
+
+        <dependency>
+            <groupId>org.uma.jmetal</groupId>
+            <artifactId>jmetal</artifactId>
+            <version>6.6</version>
+            <type>pom</type>
+        </dependency>
+
+
+        <dependency>
+            <groupId>org.uma.jmetal</groupId>
+            <artifactId>jmetal-parallel</artifactId>
+            <version>6.6</version>
+        </dependency>
+
+
+        <dependency>
+            <groupId>org.uma.jmetal</groupId>
+            <artifactId>jmetal-component</artifactId>
+            <version>6.6</version>
+        </dependency>
+
+
+        <dependency>
+            <groupId>org.uma.jmetal</groupId>
+            <artifactId>jmetal-algorithm</artifactId>
+            <version>6.6</version>
+        </dependency>
+
+
+        <dependency>
+            <groupId>org.uma.jmetal</groupId>
+            <artifactId>jmetal-core</artifactId>
+            <version>6.6</version>
+        </dependency>
+
+    </dependencies>
+
+</project>
