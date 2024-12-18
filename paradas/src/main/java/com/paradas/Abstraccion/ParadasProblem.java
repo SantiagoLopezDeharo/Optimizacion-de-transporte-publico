@@ -2,6 +2,7 @@ package com.paradas.Abstraccion;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import org.uma.jmetal.problem.integerproblem.impl.AbstractIntegerProblem;
 import org.uma.jmetal.solution.integersolution.IntegerSolution;
@@ -9,9 +10,9 @@ import org.uma.jmetal.solution.integersolution.impl.DefaultIntegerSolution;
 
 public class ParadasProblem extends AbstractIntegerProblem {
 
-    public ParadasProblem() {
+    public ParadasProblem(int cantidadDeSegmentos, Map<String, Map<String, Integer>> matrix) {
 
-        int cantVariables = 6;
+        int cantVariables = cantidadDeSegmentos;
         numberOfObjectives(1);
 
         // Set the lower and upper bounds for each variable (0 to 3 for each)

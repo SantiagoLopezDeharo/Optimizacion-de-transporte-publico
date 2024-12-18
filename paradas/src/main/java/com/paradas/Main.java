@@ -1,6 +1,11 @@
 package com.paradas;
 
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.IOException;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.uma.jmetal.algorithm.Algorithm;
 import org.uma.jmetal.algorithm.singleobjective.geneticalgorithm.GeneticAlgorithmBuilder;
@@ -17,9 +22,40 @@ import org.uma.jmetal.util.evaluator.impl.SequentialSolutionListEvaluator;
 import com.paradas.Abstraccion.ParadasProblem;
 
 public class Main {
+    @SuppressWarnings("CallToPrintStackTrace")
+    public static Map<String, Map<String, Integer>> readCsvToMap(String filePath) {
+        Map<String, Map<String, Integer>> dataMap = new HashMap<>();
+
+        try (BufferedReader br = new BufferedReader(new FileReader(filePath))) {
+            String line;
+            // Skip the header line
+            br.readLine();
+
+            while ((line = br.readLine()) != null) {
+                String[] values = line.split(",");
+
+                if (values.length == 3) {
+                    String origin = values[0];
+                    String destination = values[1];
+                    int passengers = Integer.parseInt(values[2]);
+
+                    // Add data to the map
+                    dataMap.computeIfAbsent(origin, k -> new HashMap<>())
+                           .put(destination, passengers);
+                }
+            }
+        } catch (IOException | NumberFormatException e) {
+            e.printStackTrace();
+        }
+
+        return dataMap;
+    }
     public static void main(String[] args) {
+        String filePath = "src/main/resources/data.csv";
+        Map<String, Map<String, Integer>> matrix = readCsvToMap(filePath);
+
         // Step 1: Create the problem
-        Problem<IntegerSolution> problem = new ParadasProblem();
+        Problem<IntegerSolution> problem = new ParadasProblem(6, matrix);
 
         // Step 2: Configure the operators
         @SuppressWarnings({ "rawtypes", "unchecked" })
