@@ -1,6 +1,7 @@
 package com.paradas.Abstraccion;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -10,9 +11,27 @@ import org.uma.jmetal.solution.integersolution.impl.DefaultIntegerSolution;
 
 public class ParadasProblem extends AbstractIntegerProblem {
 
+    private Map<String, Map<String, Integer>> matrix;
+    private Map<String, Integer> demanda;
+
     public ParadasProblem(int cantidadDeSegmentos, Map<String, Map<String, Integer>> matrix) {
 
+        this.matrix = matrix;
+
+        this.demanda = new HashMap<>();
+
+        for (String origin : matrix.keySet())
+        {
+            int demandadx = 0;
+
+            for (String destination : matrix.get(origin).keySet())
+                demandadx += matrix.get(origin).get(destination);
+
+            demanda.put(origin, demandadx);
+        }
+
         int cantVariables = cantidadDeSegmentos;
+        
         numberOfObjectives(1);
 
         // Set the lower and upper bounds for each variable (0 to 3 for each)
@@ -39,8 +58,26 @@ public class ParadasProblem extends AbstractIntegerProblem {
 
     @Override
     public IntegerSolution evaluate(IntegerSolution solution) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'evaluate'");
+        int f1 = 0;
+        for (String origin : matrix.keySet())
+            for (String destination : matrix.get(origin).keySet())
+                f1 += matrix.get(origin).get(destination); // TO DO 
+        
+
+        int f2 = 0;
+        for (int v = 0; v < numberOfVariables(); v+= 2)
+            f2 += solution.variables().get(v) == 0 ? 0 : 1;
+        
+        int f3 = 0;
+
+        for (int v = 0; v < numberOfVariables(); v+= 2)
+            f3 += solution.variables().get(v)  ;  // TO DO
+
+        double fitnes = (-1) * 0.4 * f1 + 0.3 * f2 + 0.3 * f3;
+
+        solution.objectives()[0] = fitnes;
+
+        return solution;
     }
     
 }
