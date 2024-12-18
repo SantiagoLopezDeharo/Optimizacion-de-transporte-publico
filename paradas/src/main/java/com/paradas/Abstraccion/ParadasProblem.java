@@ -16,7 +16,7 @@ public class ParadasProblem extends AbstractIntegerProblem {
     private int maxDemanda = 0;
     private final List<String> indexToSegement; // We keep a list to know wich position in the individuals represent which segment
 
-    public ParadasProblem(int cantidadDeSegmentos, Map<String, Map<String, Integer>> matrix) {
+    public ParadasProblem(Map<String, Map<String, Integer>> matrix) {
 
         this.matrix = matrix;
 
@@ -38,7 +38,7 @@ public class ParadasProblem extends AbstractIntegerProblem {
             maxDemanda = demandadx > maxDemanda ? demandadx : maxDemanda;
         }
 
-        int cantVariables = cantidadDeSegmentos;
+        int cantVariables = demanda.keySet().toArray().length;;
         
         numberOfObjectives(1);
 
