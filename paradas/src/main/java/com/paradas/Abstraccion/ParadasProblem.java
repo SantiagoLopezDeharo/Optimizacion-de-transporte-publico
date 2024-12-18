@@ -13,6 +13,8 @@ public class ParadasProblem extends AbstractIntegerProblem {
 
     private final Map<String, Map<String, Integer>> matrix;
     private final Map<String, Integer> demanda;
+    private int maxDemanda = 0;
+    private final List<String> indexToSegement; // We keep a list to know wich position in the individuals represent which segment
 
     public ParadasProblem(int cantidadDeSegmentos, Map<String, Map<String, Integer>> matrix) {
 
@@ -20,14 +22,20 @@ public class ParadasProblem extends AbstractIntegerProblem {
 
         this.demanda = new HashMap<>();
 
+        this.indexToSegement = new ArrayList<>();
+
         for (String origin : matrix.keySet())
         {
             int demandadx = 0;
+
+            indexToSegement.add(origin);
 
             for (String destination : matrix.get(origin).keySet())
                 demandadx += matrix.get(origin).get(destination);
 
             demanda.put(origin, demandadx);
+
+            maxDemanda = demandadx > maxDemanda ? demandadx : maxDemanda;
         }
 
         int cantVariables = cantidadDeSegmentos;
@@ -58,20 +66,20 @@ public class ParadasProblem extends AbstractIntegerProblem {
 
     @Override
     public IntegerSolution evaluate(IntegerSolution solution) {
-        int f1 = 0;
+        double f1 = 0;
         for (String origin : matrix.keySet())
             for (String destination : matrix.get(origin).keySet())
                 f1 += matrix.get(origin).get(destination); // TO DO 
         
 
-        int f2 = 0;
-        for (int v = 0; v < numberOfVariables(); v+= 2)
+        double f2 = 0;
+        for ( int v = 0; v < numberOfVariables(); v++ )
             f2 += solution.variables().get(v) == 0 ? 0 : 1;
         
-        int f3 = 0;
+        double f3 = 0;
 
-        for (int v = 0; v < numberOfVariables(); v+= 2)
-            f3 += solution.variables().get(v)  ;  // TO DO
+        for ( int v = 0; v < numberOfVariables(); v++ )
+            f3 += solution.variables().get(v) * 2 * (1 - (demanda.get( indexToSegement.get(v) ) / maxDemanda))  ;  // A revisar
 
         double fitnes = (-1) * 0.4 * f1 + 0.3 * f2 + 0.3 * f3;
 
