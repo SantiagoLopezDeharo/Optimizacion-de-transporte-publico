@@ -28,7 +28,7 @@ public class Main {
         SelectionOperator<List<IntegerSolution>, IntegerSolution> selection = new BinaryTournamentSelection<>();
 
         // Step 3: Create the Genetic Algorithm instance
-        Algorithm<IntegerSolution> algorithm = new GeneticAlgorithmBuilder<IntegerSolution>(problem, crossover, mutation)
+        Algorithm<IntegerSolution> algorithm = new GeneticAlgorithmBuilder<>(problem, crossover, mutation)
                 .setPopulationSize(100)
                 .setMaxEvaluations(20000)
                 .setSelectionOperator(selection)
