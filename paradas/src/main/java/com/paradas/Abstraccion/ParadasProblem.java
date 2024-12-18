@@ -38,7 +38,7 @@ public class ParadasProblem extends AbstractIntegerProblem {
             maxDemanda = demandadx > maxDemanda ? demandadx : maxDemanda;
         }
 
-        int cantVariables = demanda.keySet().toArray().length;;
+        int cantVariables = demanda.keySet().toArray().length;
         
         numberOfObjectives(1);
 
