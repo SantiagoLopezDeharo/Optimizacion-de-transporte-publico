@@ -55,7 +55,7 @@ public class Main {
         Map<String, Map<String, Integer>> matrix = readCsvToMap(filePath);
 
         // Step 1: Create the problem
-        Problem<IntegerSolution> problem = new ParadasProblem(6, matrix);
+        Problem<IntegerSolution> problem = new ParadasProblem(1063, matrix);
 
         // Step 2: Configure the operators
         @SuppressWarnings({ "rawtypes", "unchecked" })
