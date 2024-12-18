@@ -11,8 +11,8 @@ import org.uma.jmetal.solution.integersolution.impl.DefaultIntegerSolution;
 
 public class ParadasProblem extends AbstractIntegerProblem {
 
-    private Map<String, Map<String, Integer>> matrix;
-    private Map<String, Integer> demanda;
+    private final Map<String, Map<String, Integer>> matrix;
+    private final Map<String, Integer> demanda;
 
     public ParadasProblem(int cantidadDeSegmentos, Map<String, Map<String, Integer>> matrix) {
 
