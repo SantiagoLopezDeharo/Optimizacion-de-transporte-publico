@@ -15,6 +15,7 @@ public class ParadasProblem extends AbstractIntegerProblem {
     private final Map<String, Integer> demanda;
     private int maxDemanda = 0;
     private final List<String> indexToSegement; // We keep a list to know wich position in the individuals represent which segment
+    private final Map<String, Integer> segmentToIndex;
 
     public ParadasProblem(Map<String, Map<String, Integer>> matrix) {
 
@@ -23,12 +24,14 @@ public class ParadasProblem extends AbstractIntegerProblem {
         this.demanda = new HashMap<>();
 
         this.indexToSegement = new ArrayList<>();
+        this.segmentToIndex = new HashMap<>();
 
         for (String origin : matrix.keySet())
         {
             int demandadx = 0;
 
             indexToSegement.add(origin);
+            segmentToIndex.put(origin, indexToSegement.size() - 1);
 
             for (String destination : matrix.get(origin).keySet())
                 demandadx += matrix.get(origin).get(destination);
@@ -64,12 +67,27 @@ public class ParadasProblem extends AbstractIntegerProblem {
         return new DefaultIntegerSolution(this.variableBounds(), this.numberOfObjectives(), 0);
     }
 
+    private int cubierto(IntegerSolution solution, String origen, String destino) {
+        try {
+            int indexOrigen = segmentToIndex.get(origen );
+            int indexDestino= segmentToIndex.get(destino);
+    
+            if ( solution.variables().get(indexOrigen) > 0 && solution.variables().get(indexDestino) > 0 )
+                return 1;
+    
+            return 0;
+        } 
+        catch (Exception e) {
+            return 0;
+        }
+    }
+
     @Override
     public IntegerSolution evaluate(IntegerSolution solution) {
         double f1 = 0;
         for (String origin : matrix.keySet())
             for (String destination : matrix.get(origin).keySet())
-                f1 += matrix.get(origin).get(destination); // TO DO 
+                f1 += matrix.get(origin).get(destination) * cubierto(solution, origin, destination); // A revisar
         
 
         double f2 = 0;
