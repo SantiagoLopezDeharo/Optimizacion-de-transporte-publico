@@ -68,14 +68,14 @@ public class Main {
 
         // Step 2: Configure the operators
         @SuppressWarnings({ "rawtypes", "unchecked" })
-        CrossoverOperator<IntegerSolution> crossover = new TwoPointCrossover(0.81); // 81% crossover probability
-        MutationOperator<IntegerSolution> mutation = new IntegerPolynomialMutation(0.0001, 9); // 0.01% mutation probability
+        CrossoverOperator<IntegerSolution> crossover = new TwoPointCrossover(0.81); // 70% crossover probability
+        MutationOperator<IntegerSolution> mutation = new IntegerPolynomialMutation(0.02, 5); // 2% mutation probability
         SelectionOperator<List<IntegerSolution>, IntegerSolution> selection = new BinaryTournamentSelection<>();
 
         // Step 3: Create the Genetic Algorithm instance
         Algorithm<IntegerSolution> algorithm = new GeneticAlgorithmBuilder<>(problem, crossover, mutation)
                 .setPopulationSize(504)
-                .setMaxEvaluations(20000)
+                .setMaxEvaluations(25000)
                 .setSelectionOperator(selection)
                 .setSolutionListEvaluator(new SequentialSolutionListEvaluator<>())
                 .build();

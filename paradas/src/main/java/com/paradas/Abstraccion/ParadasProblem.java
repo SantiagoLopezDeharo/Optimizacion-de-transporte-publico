@@ -16,6 +16,7 @@ public class ParadasProblem extends AbstractIntegerProblem {
     private int maxDemanda = 0;
     private final List<String> indexToSegement; // We keep a list to know wich position in the individuals represent which segment
     private final Map<String, Integer> segmentToIndex;
+    private double demandaTotal = 0;
 
     public ParadasProblem(Map<String, Map<String, Integer>> matrix) {
 
@@ -37,6 +38,7 @@ public class ParadasProblem extends AbstractIntegerProblem {
                 demandadx += matrix.get(origin).get(destination);
 
             demanda.put(origin, demandadx);
+            demandaTotal += demandadx;
 
             maxDemanda = demandadx > maxDemanda ? demandadx : maxDemanda;
         }
@@ -70,14 +72,8 @@ public class ParadasProblem extends AbstractIntegerProblem {
     // Function to determine if a given origin-destionation bus stop are present on the solution
     private int cubierto(IntegerSolution solution, String origen, String destino) {
         try {
-            int indexOrigen = segmentToIndex.get(origen );
-            int indexDestino= segmentToIndex.get(destino);
-    
-            if ( solution.variables().get(indexOrigen) > 0 && solution.variables().get(indexDestino) > 0 )
-                return 1;
-    
-            return 0;
-        } 
+            return solution.variables().get(segmentToIndex.get(origen )) > 0 && solution.variables().get(segmentToIndex.get(destino)) > 0 ? 1 : 0;
+        }
         catch (Exception e) {
             return 0;
         }
@@ -86,21 +82,28 @@ public class ParadasProblem extends AbstractIntegerProblem {
     @Override
     public IntegerSolution evaluate(IntegerSolution solution) {
         double f1 = 0;
+        // Maximize coverage of the demand of each route
         for (String origin : matrix.keySet())
             for (String destination : matrix.get(origin).keySet())
                 f1 += matrix.get(origin).get(destination) * cubierto(solution, origin, destination); // A revisar
         
+        f1 = f1 / demandaTotal; // We noramlice the coverage into all the demand of the problem to see what porcentaje of the demand is being coverages
 
         double f2 = 0;
+        // Minimize amount of bus stops ( less bus stops would reduce the amount of time for the bus to go from A to B )
         for ( int v = 0; v < numberOfVariables(); v++ )
             f2 += solution.variables().get(v) == 0 ? 0 : 1;
         
+        f2 = f2 / this.numberOfVariables(); // We normalice the porcentaje of segments with bus stops
+        
         double f3 = 0;
-
+        // Minimize cost
         for ( int v = 0; v < numberOfVariables(); v++ )
             f3 += solution.variables().get(v) * 2 * (1 - (demanda.get( indexToSegement.get(v) ) / maxDemanda))  ;  // A revisar
 
-        double fitnes = (-1) * 0.4 * f1 + 0.3 * f2 + 0.3 * f3;
+        f3 = f3 / (3 * this.numberOfVariables()); // We normalice the cost to the porcentaje of the maximum posible cost
+
+        double fitnes = 100 * ( (-1) * 0.5 * f1 + 0.25 * f2 + 0.25 * f3 ); // we make a weighted-fitness with all this factors
 
         solution.objectives()[0] = fitnes;
 
