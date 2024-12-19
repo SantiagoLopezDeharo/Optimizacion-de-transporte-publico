@@ -67,6 +67,7 @@ public class ParadasProblem extends AbstractIntegerProblem {
         return new DefaultIntegerSolution(this.variableBounds(), this.numberOfObjectives(), 0);
     }
 
+    // Function to determine if a given origin-destionation bus stop are present on the solution
     private int cubierto(IntegerSolution solution, String origen, String destino) {
         try {
             int indexOrigen = segmentToIndex.get(origen );
