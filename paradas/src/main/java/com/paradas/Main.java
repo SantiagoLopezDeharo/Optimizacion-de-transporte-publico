@@ -74,7 +74,7 @@ public class Main {
 
         // Step 3: Create the Genetic Algorithm instance
         Algorithm<IntegerSolution> algorithm = new GeneticAlgorithmBuilder<>(problem, crossover, mutation)
-                .setPopulationSize(150)
+                .setPopulationSize(504)
                 .setMaxEvaluations(20000)
                 .setSelectionOperator(selection)
                 .setSolutionListEvaluator(new SequentialSolutionListEvaluator<>())
@@ -85,7 +85,7 @@ public class Main {
 
         // Step 5: Get and print the solution
         IntegerSolution solution = algorithm.result();
-        System.out.println("Best solution: " + solution.variables());
-        System.out.println("Objective value: " + solution.objectives()[0]);
+
+        ((ParadasProblem) problem).printResult(solution);
     }
 }

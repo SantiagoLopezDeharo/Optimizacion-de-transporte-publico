@@ -105,5 +105,15 @@ public class ParadasProblem extends AbstractIntegerProblem {
 
         return solution;
     }
+
+    public void printResult(IntegerSolution solution) {
+        System.out.println("-----------------");
+        System.out.println("Segemnt;value");
+        for (int v = 0; v < numberOfVariables(); v++)
+            System.out.println(indexToSegement.get(v) + ";" + String.valueOf(solution.variables().get(v)));
+        
+        System.out.println("-----------------");
+        System.out.println("Objective value: " + solution.objectives()[0]);
+    }
     
 }
