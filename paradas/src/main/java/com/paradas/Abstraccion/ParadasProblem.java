@@ -112,9 +112,9 @@ public class ParadasProblem extends AbstractIntegerProblem {
 
     public void printResult(IntegerSolution solution) {
         System.out.println("-----------------");
-        System.out.println("Segemnt;value");
+        System.out.println("CODSEG,value");
         for (int v = 0; v < numberOfVariables(); v++)
-            System.out.println(indexToSegement.get(v) + ";" + String.valueOf(solution.variables().get(v)));
+            System.out.println(indexToSegement.get(v) + "," + String.valueOf(solution.variables().get(v)));
         
         System.out.println("-----------------");
         System.out.println("Objective value: " + solution.objectives()[0]);
