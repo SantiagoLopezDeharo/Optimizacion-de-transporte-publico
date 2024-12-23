@@ -75,7 +75,7 @@ public class Main {
         // Step 3: Create the Genetic Algorithm instance
         Algorithm<IntegerSolution> algorithm = new GeneticAlgorithmBuilder<>(problem, crossover, mutation)
                 .setPopulationSize(504)
-                .setMaxEvaluations(25000)
+                .setMaxEvaluations(30000)
                 .setSelectionOperator(selection)
                 .setSolutionListEvaluator(new SequentialSolutionListEvaluator<>())
                 .build();

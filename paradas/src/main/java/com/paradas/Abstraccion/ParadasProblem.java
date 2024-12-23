@@ -12,15 +12,17 @@ import org.uma.jmetal.solution.integersolution.impl.DefaultIntegerSolution;
 public class ParadasProblem extends AbstractIntegerProblem {
 
     private final Map<String, Map<String, Integer>> matrix;
+    private final Map<String, Map<String, Integer>> reverseMatrix;
     private final Map<String, Integer> demanda;
     private int maxDemanda = 0;
     private final List<String> indexToSegement; // We keep a list to know wich position in the individuals represent which segment
     private final Map<String, Integer> segmentToIndex;
-    private double demandaTotal = 0;
 
     public ParadasProblem(Map<String, Map<String, Integer>> matrix) {
 
         this.matrix = matrix;
+
+        this.reverseMatrix = new HashMap<>();
 
         this.demanda = new HashMap<>();
 
@@ -35,10 +37,17 @@ public class ParadasProblem extends AbstractIntegerProblem {
             segmentToIndex.put(origin, indexToSegement.size() - 1);
 
             for (String destination : matrix.get(origin).keySet())
+            {
                 demandadx += matrix.get(origin).get(destination);
 
+                if (reverseMatrix.containsKey(destination)) reverseMatrix.get(destination).put(origin, matrix.get(origin).get(destination));
+                else {
+                    reverseMatrix.put(destination, new HashMap<>() );
+                    reverseMatrix.get(destination).put(origin, matrix.get(origin).get(destination));
+                }
+            }
+
             demanda.put(origin, demandadx);
-            demandaTotal += demandadx;
 
             maxDemanda = demandadx > maxDemanda ? demandadx : maxDemanda;
         }
@@ -85,25 +94,21 @@ public class ParadasProblem extends AbstractIntegerProblem {
         // Maximize coverage of the demand of each route
         for (String origin : matrix.keySet())
             for (String destination : matrix.get(origin).keySet())
-                f1 += matrix.get(origin).get(destination) * cubierto(solution, origin, destination); // A revisar
+                f1 += ( matrix.get(origin).get(destination) + reverseMatrix.get(destination).get(origin) )* cubierto(solution, origin, destination); // A revisar
         
-        f1 = f1 / demandaTotal; // We noramlice the coverage into all the demand of the problem to see what porcentaje of the demand is being coverages
 
         double f2 = 0;
         // Minimize amount of bus stops ( less bus stops would reduce the amount of time for the bus to go from A to B )
         for ( int v = 0; v < numberOfVariables(); v++ )
             f2 += solution.variables().get(v) == 0 ? 0 : 1;
         
-        f2 = f2 / this.numberOfVariables(); // We normalice the porcentaje of segments with bus stops
         
         double f3 = 0;
         // Minimize cost
         for ( int v = 0; v < numberOfVariables(); v++ )
             f3 += solution.variables().get(v) * 2 * (1 - (demanda.get( indexToSegement.get(v) ) / maxDemanda))  ;  // A revisar
 
-        f3 = f3 / (3 * this.numberOfVariables()); // We normalice the cost to the porcentaje of the maximum posible cost
-
-        double fitnes = 100 * ( (-1) * 0.5 * f1 + 0.25 * f2 + 0.25 * f3 ); // we make a weighted-fitness with all this factors
+        double fitnes = (-1) * f1 + f2 + f3 ; // we make a weighted-fitness with all this factors
 
         solution.objectives()[0] = fitnes;
 
