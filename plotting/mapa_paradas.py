@@ -32,17 +32,36 @@ plt.savefig('mapa_paradas_1.png', dpi=300)
 
 #################################### MULTI-COLORED MAP ####################################
 
-# Assign colors based on the 'value' values
-color_map = {1: 'red', 2: 'blue', 3: 'green'}
+# Assign shades of green based on the 'value' values
+color_map = {
+    1: '#a1d99b',  # Light green
+    2: '#41ab5d',  # Medium green
+    3: '#006d2c'   # Dark green
+}
 
 # Apply the color map to the 'value' column
 gdf['color_mult'] = gdf['value'].map(color_map).fillna('white')
 
-# Plot the shapefile
-map_mult = gdf.plot(figsize=(10, 10), color=gdf['color_mult'], edgecolor='black')
-map_mult.set_title('Paradas por segmento censal', fontsize=15)
-map_mult.set_xlabel('Longitude')
-map_mult.set_ylabel('Latitude')
+# Create the figure and axis
+fig, ax = plt.subplots(figsize=(10, 10))
+
+# Plot the GeoDataFrame
+gdf.plot(ax=ax, color=gdf['color_mult'], edgecolor='black')
+
+# Add a title and labels
+ax.set_title('Paradas por segmento censal', fontsize=15)
+ax.set_xlabel('Longitude')
+ax.set_ylabel('Latitude')
+
+# Create a legend
+import matplotlib.patches as mpatches
+legend_labels = {
+    1: '1',
+    2: '2',
+    3: '3'
+}
+patches = [mpatches.Patch(color=color_map[key], label=legend_labels[key]) for key in legend_labels]
+ax.legend(handles=patches, loc='lower right', title='Legend')
 
 # Save the plot to a file
 plt.savefig('mapa_paradas_2.png', dpi=300)
