@@ -12,7 +12,6 @@ import org.uma.jmetal.solution.integersolution.impl.DefaultIntegerSolution;
 public class ParadasProblem extends AbstractIntegerProblem {
 
     private final Map<String, Map<String, Integer>> matrix;
-    private final Map<String, Map<String, Integer>> reverseMatrix;
     private final Map<String, Integer> demanda;
     private int maxDemanda = 0;
     private final List<String> indexToSegement; // We keep a list to know wich position in the individuals represent which segment
@@ -21,8 +20,6 @@ public class ParadasProblem extends AbstractIntegerProblem {
     public ParadasProblem(Map<String, Map<String, Integer>> matrix) {
 
         this.matrix = matrix;
-
-        this.reverseMatrix = new HashMap<>();
 
         this.demanda = new HashMap<>();
 
@@ -38,8 +35,6 @@ public class ParadasProblem extends AbstractIntegerProblem {
                 int demandValue = matrix.get(origin).get(destination);
 
                 demandadx += demandValue;
-
-                reverseMatrix.computeIfAbsent(destination, k -> new HashMap<>()).put(origin, demandValue);
 
                 demanda.put(destination, demanda.getOrDefault(destination, 0) + demandValue);
 
@@ -99,7 +94,10 @@ public class ParadasProblem extends AbstractIntegerProblem {
         // Maximize coverage of the demand of each route
         for (String origin : matrix.keySet())
             for (String destination : matrix.get(origin).keySet())
-                f1 += ( matrix.get(origin).get(destination) + reverseMatrix.get(destination).get(origin) )* cubierto(solution, origin, destination); // A revisar
+            {
+                int demandaDestino = matrix.get(destination) != null && matrix.get(destination).keySet().contains(origin) ? matrix.get(destination).get(origin) : 0;
+                f1 += ( matrix.get(origin).get(destination) + demandaDestino )* cubierto(solution, origin, destination); // A revisar
+            }
         
 
         double f2 = 0;
@@ -111,7 +109,7 @@ public class ParadasProblem extends AbstractIntegerProblem {
         double f3 = 0;
         // Minimize cost
         for ( int v = 0; v < numberOfVariables(); v++ )
-            f3 += solution.variables().get(v) * 2 * (1 - (demanda.get( indexToSegement.get(v) ) / maxDemanda))  ;  // A revisar
+            f3 += solution.variables().get(v) * ( 2 * (1 - ( ( demanda.get( indexToSegement.get(v) ) * 1.0 ) / maxDemanda)) - 1 )  ;  // A revisar
 
         // double fitnes = (-1) * f1 + f2 + f3 ; // we make a weighted-fitness with all this factors
 
