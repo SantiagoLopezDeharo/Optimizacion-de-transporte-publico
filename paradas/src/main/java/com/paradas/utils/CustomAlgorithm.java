@@ -23,7 +23,7 @@ public class CustomAlgorithm<S extends Solution<?>> extends AbstractGeneticAlgor
 
   final private SolutionListEvaluator<S> evaluator;
 
-  final private FitnessTracker tracker = new FitnessTracker<>();
+  final private FitnessTracker<S> tracker = new FitnessTracker<>();
 
   private double f1, f2, f3;
 
@@ -79,10 +79,9 @@ public class CustomAlgorithm<S extends Solution<?>> extends AbstractGeneticAlgor
     evaluations = getMaxPopulationSize();
   }
 
-  @SuppressWarnings("unchecked")
   @Override 
   public void updateProgress() {
-    tracker.update(null, getPopulation());
+    tracker.update(result());
     evaluations += getMaxPopulationSize();
   }
 
