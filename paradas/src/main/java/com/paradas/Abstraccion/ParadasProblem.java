@@ -99,7 +99,6 @@ public class ParadasProblem extends AbstractIntegerProblem {
                 f1 += ( matrix.get(origin).get(destination) + demandaDestino )* cubierto(solution, origin, destination); // A revisar
             }
         
-
         double f2 = 0;
         // Minimize amount of bus stops ( less bus stops would reduce the amount of time for the bus to go from A to B )
         for ( int v = 0; v < numberOfVariables(); v++ )
@@ -111,7 +110,6 @@ public class ParadasProblem extends AbstractIntegerProblem {
         for ( int v = 0; v < numberOfVariables(); v++ )
             f3 += solution.variables().get(v) * ( 2 * (1 - ( ( demanda.get( indexToSegement.get(v) ) * 1.0 ) / maxDemanda)) - 1 )  ;  // A revisar
 
-        // double fitnes = (-1) * f1 + f2 + f3 ; // we make a weighted-fitness with all this factors
 
         solution.objectives()[0] = - f1;
         solution.objectives()[1] = f2;
@@ -129,5 +127,5 @@ public class ParadasProblem extends AbstractIntegerProblem {
         System.out.println("-----------------");
         System.out.println("Objective value: ( " + solution.objectives()[0] + ", " + solution.objectives()[1] + ", " + solution.objectives()[2] + " )");
     }
-    
+        
 }

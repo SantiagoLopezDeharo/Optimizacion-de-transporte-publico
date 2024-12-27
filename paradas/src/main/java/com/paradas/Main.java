@@ -9,7 +9,6 @@ import java.util.List;
 import java.util.Map;
 
 import org.uma.jmetal.algorithm.Algorithm;
-import org.uma.jmetal.algorithm.singleobjective.geneticalgorithm.GeneticAlgorithmBuilder;
 import org.uma.jmetal.operator.crossover.CrossoverOperator;
 import org.uma.jmetal.operator.crossover.impl.TwoPointCrossover;
 import org.uma.jmetal.operator.mutation.MutationOperator;
@@ -21,6 +20,7 @@ import org.uma.jmetal.solution.integersolution.IntegerSolution;
 import org.uma.jmetal.util.evaluator.impl.SequentialSolutionListEvaluator;
 
 import com.paradas.Abstraccion.ParadasProblem;
+import com.paradas.utils.CustomAlgorithmBuilder;
 
 import tech.tablesaw.io.csv.CsvReader;
 
@@ -60,6 +60,7 @@ public class Main {
 
         return dataMap;
     }
+
     public static void main(String[] args) {
         Map<String, Map<String, Integer>> matrix = readCsvToMap("data.csv");
 
@@ -73,13 +74,16 @@ public class Main {
         SelectionOperator<List<IntegerSolution>, IntegerSolution> selection = new BinaryTournamentSelection<>();
 
         // Step 3: Create the Genetic Algorithm instance
-        Algorithm<IntegerSolution> algorithm = new GeneticAlgorithmBuilder<>(problem, crossover, mutation)
+        Algorithm<IntegerSolution> algorithm = new CustomAlgorithmBuilder<>(problem, crossover, mutation)
                 .setPopulationSize(504)
                 .setMaxEvaluations(30000)
                 .setSelectionOperator(selection)
                 .setSolutionListEvaluator(new SequentialSolutionListEvaluator<>())
                 .build();
 
+        
+        // DefaultObservable<List<IntegerSolution>> observable = (DefaultObservable<List<IntegerSolution>>) algorithm;
+        
         // Step 4: Run the algorithm
         algorithm.run();
 
