@@ -8,7 +8,7 @@ public class FitnessTracker<S extends Solution<?>>  {
     public void update(S data) {
         generation++;
 
-        System.out.printf("Generation %d: Best = ( %.4f, %.4f, %.4f )", 
+        System.out.printf("Generation %d: Best = ( %.4f, %.4f, %.4f ) \n", 
             generation, data.objectives()[0], data.objectives()[1], data.objectives()[2]);
     }
 }
