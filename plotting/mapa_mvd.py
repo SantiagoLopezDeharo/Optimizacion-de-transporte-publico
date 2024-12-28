@@ -3,8 +3,8 @@ import geopandas as gpd
 import matplotlib.pyplot as plt
 
 # Path to shapefile and csv
-shapefile_path = 'segmentos/Marco2011_SEG_Montevideo_Total.shp'
-csv_path = 'paradas/paradas.csv'
+shapefile_path = 'segmentos/segmentos_mvd.shp'
+csv_path = 'paradas/paradas_mvd.csv'
 
 # Read the shapefile and csv
 gdf = gpd.read_file(shapefile_path)
