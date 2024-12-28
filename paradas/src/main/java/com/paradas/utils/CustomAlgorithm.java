@@ -25,10 +25,6 @@ public class CustomAlgorithm<S extends Solution<?>> extends AbstractGeneticAlgor
 
   final private FitnessTracker<S> tracker = new FitnessTracker<>();
 
-  private double f1, f2, f3;
-
-  private int conversionCount;
-
   /**
    * Constructor
    */
@@ -49,7 +45,6 @@ public class CustomAlgorithm<S extends Solution<?>> extends AbstractGeneticAlgor
   }
 
   @Override protected boolean isStoppingConditionReached() {
-
     return (evaluations >= maxEvaluations);
   }
 
@@ -91,5 +86,9 @@ public class CustomAlgorithm<S extends Solution<?>> extends AbstractGeneticAlgor
 
   @Override public String description() {
     return "Generational Genetic Algorithm" ;
+  }
+
+  public void saveFitnessToCsv() {
+    tracker.saveToCsv();
   }
 }
