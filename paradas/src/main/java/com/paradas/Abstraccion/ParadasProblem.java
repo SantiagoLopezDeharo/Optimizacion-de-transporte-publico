@@ -1,5 +1,9 @@
 package com.paradas.Abstraccion;
 
+import java.io.FileWriter;
+import java.io.IOException;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -127,5 +131,22 @@ public class ParadasProblem extends AbstractIntegerProblem {
         System.out.println("-----------------");
         System.out.println("Objective value: ( " + solution.objectives()[0] + ", " + solution.objectives()[1] + ", " + solution.objectives()[2] + " )");
     }
+
+    public void saveResultToCSV(IntegerSolution solution) {
+    String dateTime = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd_HH-mm-ss"));
+    String fileName = "results_" + dateTime + "_montevideo.csv";
+
+    try (FileWriter writer = new FileWriter(fileName)) {
+        writer.write("CODSEG,value\n");
+
+        for (int v = 0; v < numberOfVariables(); v++) {
+            writer.write(indexToSegement.get(v) + "," + solution.variables().get(v) + "\n");
+        }
+
+        System.out.println("Results saved to: " + fileName);
+    } catch (IOException e) {
+        System.err.println("An error occurred while saving the results: " + e.getMessage());
+    }
+}
         
 }

@@ -20,6 +20,7 @@ import org.uma.jmetal.solution.integersolution.IntegerSolution;
 import org.uma.jmetal.util.evaluator.impl.SequentialSolutionListEvaluator;
 
 import com.paradas.Abstraccion.ParadasProblem;
+import com.paradas.utils.CustomAlgorithm;
 import com.paradas.utils.CustomAlgorithmBuilder;
 
 import tech.tablesaw.io.csv.CsvReader;
@@ -81,9 +82,7 @@ public class Main {
                 .setSolutionListEvaluator(new SequentialSolutionListEvaluator<>())
                 .build();
 
-        
-        // DefaultObservable<List<IntegerSolution>> observable = (DefaultObservable<List<IntegerSolution>>) algorithm;
-        
+                
         // Step 4: Run the algorithm
         algorithm.run();
 
@@ -91,5 +90,9 @@ public class Main {
         IntegerSolution solution = algorithm.result();
 
         ((ParadasProblem) problem).printResult(solution);
+        ((ParadasProblem) problem).saveResultToCSV(solution);
+
+        ( (CustomAlgorithm<IntegerSolution>) algorithm).saveFitnessToCsv();
+
     }
 }
