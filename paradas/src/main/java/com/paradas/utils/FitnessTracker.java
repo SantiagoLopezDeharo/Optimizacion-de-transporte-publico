@@ -11,7 +11,7 @@ import org.uma.jmetal.solution.Solution;
 
 public class FitnessTracker<S extends Solution<?>>  {
     private int generation = 0;
-    private List<double[]> history = new ArrayList<>();
+    final private List<double[]> history = new ArrayList<>();
 
     public void update(S data) {
         generation++;

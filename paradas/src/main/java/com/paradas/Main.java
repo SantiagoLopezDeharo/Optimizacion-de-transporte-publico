@@ -63,7 +63,7 @@ public class Main {
     }
 
     public static void main(String[] args) {
-        Map<String, Map<String, Integer>> matrix = readCsvToMap("data.csv");
+        Map<String, Map<String, Integer>> matrix = readCsvToMap("data_bsas.csv");
 
         // Step 1: Create the problem
         Problem<IntegerSolution> problem = new ParadasProblem(matrix);
