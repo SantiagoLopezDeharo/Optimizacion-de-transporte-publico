@@ -4,7 +4,7 @@ import matplotlib.pyplot as plt
 
 # Path to shapefile and csv
 shapefile_path = 'segmentos/segmentos_bsas.shp'
-csv_path = 'paradas/paradas_bsas.csv'
+csv_path = 'results_2024-12-29_13-44-56_buenos_aires.csv'
 
 # Read the shapefile and csv
 gdf = gpd.read_file(shapefile_path)

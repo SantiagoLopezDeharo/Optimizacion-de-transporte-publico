@@ -8,7 +8,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.uma.jmetal.algorithm.Algorithm;
 import org.uma.jmetal.operator.crossover.CrossoverOperator;
 import org.uma.jmetal.operator.crossover.impl.TwoPointCrossover;
 import org.uma.jmetal.operator.mutation.MutationOperator;
@@ -16,8 +15,14 @@ import org.uma.jmetal.operator.mutation.impl.IntegerPolynomialMutation;
 import org.uma.jmetal.operator.selection.SelectionOperator;
 import org.uma.jmetal.operator.selection.impl.BinaryTournamentSelection;
 import org.uma.jmetal.problem.Problem;
+import org.uma.jmetal.solution.Solution;
 import org.uma.jmetal.solution.integersolution.IntegerSolution;
-import org.uma.jmetal.util.evaluator.impl.SequentialSolutionListEvaluator;
+import org.uma.jmetal.util.AbstractAlgorithmRunner;
+import org.uma.jmetal.util.JMetalLogger;
+import org.uma.jmetal.util.comparator.RankingAndCrowdingDistanceComparator;
+import org.uma.jmetal.util.fileoutput.SolutionListOutput;
+import org.uma.jmetal.util.fileoutput.impl.DefaultFileOutputContext;
+import org.uma.jmetal.util.pseudorandom.JMetalRandom;
 
 import com.paradas.Abstraccion.ParadasProblem;
 import com.paradas.utils.CustomAlgorithm;
@@ -25,7 +30,7 @@ import com.paradas.utils.CustomAlgorithmBuilder;
 
 import tech.tablesaw.io.csv.CsvReader;
 
-public class Main {
+public class Main extends AbstractAlgorithmRunner {
     @SuppressWarnings("CallToPrintStackTrace")
     public static Map<String, Map<String, Integer>> readCsvToMap(String fileName) {
         Map<String, Map<String, Integer>> dataMap = new HashMap<>();
@@ -62,35 +67,41 @@ public class Main {
         return dataMap;
     }
 
+
+      public static void printFinalSolutionSet(List<? extends Solution<?>> population) {
+        new SolutionListOutput(population)
+        .setVarFileOutputContext(new DefaultFileOutputContext("VAR" + JMetalRandom.getInstance().getSeed() + ".csv", ","))
+        .setFunFileOutputContext(new DefaultFileOutputContext("FUN"+ JMetalRandom.getInstance().getSeed() +".csv", ","))
+        .print();
+
+        JMetalLogger.logger.info("Random seed: " + JMetalRandom.getInstance().getSeed());
+        JMetalLogger.logger.info("Objectives values have been written to file FUN.tsv");
+        JMetalLogger.logger.info("Variables values have been written to file VAR.tsv");
+    }
+
     public static void main(String[] args) {
-        Map<String, Map<String, Integer>> matrix = readCsvToMap("data_bsas.csv");
+        Map<String, Map<String, Integer>> matrix = readCsvToMap("pittsburg.csv");
 
         // Step 1: Create the problem
         Problem<IntegerSolution> problem = new ParadasProblem(matrix);
 
         // Step 2: Configure the operators
-        @SuppressWarnings({ "rawtypes", "unchecked" })
-        CrossoverOperator<IntegerSolution> crossover = new TwoPointCrossover(0.81); // 81% crossover probability
-        MutationOperator<IntegerSolution> mutation = new IntegerPolynomialMutation(0.02, 5); // 2% mutation probability
-        SelectionOperator<List<IntegerSolution>, IntegerSolution> selection = new BinaryTournamentSelection<>();
+        @SuppressWarnings({"rawtypes", "unchecked" })
+        CrossoverOperator<IntegerSolution> crossover = new TwoPointCrossover(0.8); // 80% crossover probability
+        MutationOperator<IntegerSolution> mutation = new IntegerPolynomialMutation(0.01, 5); // 2% mutation probability
+        SelectionOperator<List<IntegerSolution>, IntegerSolution> selection = new BinaryTournamentSelection<>(new RankingAndCrowdingDistanceComparator<>());
+        int populationSize = 200;
 
         // Step 3: Create the Genetic Algorithm instance
-        Algorithm<IntegerSolution> algorithm = new CustomAlgorithmBuilder<>(problem, crossover, mutation)
-                .setPopulationSize(204)
-                .setMaxEvaluations(30000)
+        CustomAlgorithm<IntegerSolution> algorithm = new CustomAlgorithmBuilder<>(problem, crossover, mutation, populationSize)
+                .setMaxEvaluations(60000)
                 .setSelectionOperator(selection)
-                .setSolutionListEvaluator(new SequentialSolutionListEvaluator<>())
+                //.setSolutionListEvaluator(new SequentialSolutionListEvaluator<>())
                 .build();
 
-                
-        // Step 4: Run the algorithm
         algorithm.run();
-
-        // Step 5: Get and print the solution
-        IntegerSolution solution = algorithm.result();
-
-        ((ParadasProblem) problem).printResult(solution);
-        ((ParadasProblem) problem).saveResultToCSV(solution);
+        List<IntegerSolution> population = algorithm.result();
+        printFinalSolutionSet(population);
 
         ( (CustomAlgorithm<IntegerSolution>) algorithm).saveFitnessToCsv();
 

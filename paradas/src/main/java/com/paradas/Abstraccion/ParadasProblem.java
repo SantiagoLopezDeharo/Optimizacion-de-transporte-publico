@@ -134,7 +134,7 @@ public class ParadasProblem extends AbstractIntegerProblem {
 
     public void saveResultToCSV(IntegerSolution solution) {
     String dateTime = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd_HH-mm-ss"));
-    String fileName = "results_" + dateTime + "_montevideo.csv";
+    String fileName = "results_" + dateTime + "_buenos_aires.csv";
 
     try (FileWriter writer = new FileWriter(fileName)) {
         writer.write("CODSEG,value\n");

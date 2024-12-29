@@ -13,19 +13,25 @@ public class FitnessTracker<S extends Solution<?>>  {
     private int generation = 0;
     final private List<double[]> history = new ArrayList<>();
 
-    public void update(S data) {
+    public void update(List<S> data) {
         generation++;
 
-        history.add(data.objectives());
+        S max = data.get(0);
+
+        for (int i = 0; i < data.size(); i++) 
+            if (data.get(i).objectives()[0] > max.objectives()[0])
+                max = data.get(i);
+
+        history.add(max.objectives());
 
         System.out.printf("Generation %d: Best = ( %.4f, %.4f, %.4f ) \n", 
-            generation, data.objectives()[0], data.objectives()[1], data.objectives()[2]);
+            generation, max.objectives()[0], max.objectives()[1], max.objectives()[2]);
         
     }
 
     public void saveToCsv() {
         String dateTime = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd_HH-mm-ss"));
-    String fileName = "fitness_" + dateTime + "_montevideo.csv";
+    String fileName = "fitness_" + dateTime + "_buenos_aires.csv";
 
     try (FileWriter writer = new FileWriter(fileName)) {
         writer.write("generation,f1,f2,f3\n");
