@@ -132,7 +132,14 @@ public class ParadasProblem extends AbstractIntegerProblem {
         System.out.println("Objective value: ( " + solution.objectives()[0] + ", " + solution.objectives()[1] + ", " + solution.objectives()[2] + " )");
     }
 
-    public void saveResultToCSV(IntegerSolution solution) {
+    public void saveResultToCSV(List<IntegerSolution> population) {
+
+    IntegerSolution solution = population.get(0);
+
+    for (int i = 0; i < population.size(); i++)
+        if (solution.objectives()[0] > population.get(i).objectives()[0])
+            solution = population.get(i);
+    
     String dateTime = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd_HH-mm-ss"));
     String fileName = "results_" + dateTime + "_buenos_aires.csv";
 

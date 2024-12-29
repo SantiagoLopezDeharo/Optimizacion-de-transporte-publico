@@ -94,7 +94,7 @@ public class Main extends AbstractAlgorithmRunner {
 
         // Step 3: Create the Genetic Algorithm instance
         CustomAlgorithm<IntegerSolution> algorithm = new CustomAlgorithmBuilder<>(problem, crossover, mutation, populationSize)
-                .setMaxEvaluations(60000)
+                .setMaxEvaluations(30000)
                 .setSelectionOperator(selection)
                 //.setSolutionListEvaluator(new SequentialSolutionListEvaluator<>())
                 .build();
@@ -102,6 +102,8 @@ public class Main extends AbstractAlgorithmRunner {
         algorithm.run();
         List<IntegerSolution> population = algorithm.result();
         printFinalSolutionSet(population);
+
+        ((ParadasProblem) problem).saveResultToCSV(population);
 
         ( (CustomAlgorithm<IntegerSolution>) algorithm).saveFitnessToCsv();
 
