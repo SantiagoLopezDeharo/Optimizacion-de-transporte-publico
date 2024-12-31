@@ -13,7 +13,27 @@
         <maven.compiler.target>17</maven.compiler.target>
     </properties>
 
-        <dependencies>
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>exec-maven-plugin</artifactId>
+                <version>3.1.0</version>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>java</goal>
+                        </goals>
+                    </execution>
+                </executions>
+                <configuration>
+                    <mainClass>com.paradas.Main</mainClass> <!-- Your main class here -->
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
+
+    <dependencies>
 
         <dependency>
             <groupId>org.uma.jmetal</groupId>
