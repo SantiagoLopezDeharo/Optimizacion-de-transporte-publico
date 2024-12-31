@@ -80,7 +80,7 @@ public class Main extends AbstractAlgorithmRunner {
     }
 
     public static void main(String[] args) {
-        Map<String, Map<String, Integer>> matrix = readCsvToMap("pittsburg.csv");
+        Map<String, Map<String, Integer>> matrix = readCsvToMap("data_bsas.csv");
 
         // Step 1: Create the problem
         Problem<IntegerSolution> problem = new ParadasProblem(matrix);
@@ -88,7 +88,7 @@ public class Main extends AbstractAlgorithmRunner {
         // Step 2: Configure the operators
         @SuppressWarnings({"rawtypes", "unchecked" })
         CrossoverOperator<IntegerSolution> crossover = new TwoPointCrossover(0.8); // 80% crossover probability
-        MutationOperator<IntegerSolution> mutation = new IntegerPolynomialMutation(0.01, 5); // 2% mutation probability
+        MutationOperator<IntegerSolution> mutation = new IntegerPolynomialMutation(0.1, 5); // 1% mutation probability
         SelectionOperator<List<IntegerSolution>, IntegerSolution> selection = new BinaryTournamentSelection<>(new RankingAndCrowdingDistanceComparator<>());
         int populationSize = 200;
 

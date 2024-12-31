@@ -2,7 +2,7 @@ import pandas as pd
 import matplotlib.pyplot as plt
 
 # Read the CSV file
-file_path = "fitness_evolution_2.csv"  # Replace with the path to your CSV file
+file_path = "fitness_evolution.csv"  # Replace with the path to your CSV file
 data = pd.read_csv(file_path)
 
 # Extract generations and function values
