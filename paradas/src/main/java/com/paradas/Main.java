@@ -80,7 +80,7 @@ public class Main extends AbstractAlgorithmRunner {
     }
 
     public static void main(String[] args) {
-        Map<String, Map<String, Integer>> matrix = readCsvToMap("data_bsas.csv");
+        Map<String, Map<String, Integer>> matrix = readCsvToMap("data.csv");
 
         // Step 1: Create the problem
         Problem<IntegerSolution> problem = new ParadasProblem(matrix);
