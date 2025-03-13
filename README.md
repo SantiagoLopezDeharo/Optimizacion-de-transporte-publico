@@ -12,7 +12,7 @@ El proyecto consiste en hacer uso de un algoritmo genetico para optimizar el pos
 ## Tech Stack
 ![](https://cdn.iconscout.com/icon/free/png-256/free-java-logo-icon-download-in-svg-png-gif-file-formats--wordmark-programming-language-pack-logos-icons-1174953.png?f=webp&w=256)
 
-Java with JMetal framework.
+Java with JMetal framework con Maven.
 
 
 
