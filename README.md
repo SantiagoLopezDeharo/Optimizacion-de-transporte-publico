@@ -10,7 +10,7 @@ El proyecto consiste en hacer uso de un algoritmo genetico para optimizar el pos
 
 
 ## Tech Stack
-![](https://cdn.iconscout.com/icon/free/png-256/free-java-logo-icon-download-in-svg-png-gif-file-formats--wordmark-programming-language-pack-logos-icons-1174953.png?f=webp&w=256)
+<img height="60" src="https://raw.githubusercontent.com/marwin1991/profile-technology-icons/refs/heads/main/icons/java.png">   <img height="60" src="https://jmetal.sourceforge.net/images/jMetalLogo.png">      <img height="60" src="https://static-00.iconduck.com/assets.00/file-type-maven-icon-766x1024-86phvtjn.png">
 
 Java with JMetal framework con Maven.
 
