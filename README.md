@@ -1,6 +1,5 @@
 
-![Logo](https://www.eficienciaenergetica.gub.uy/image/journal/article?img_id=235458724)
-
+<img height="120" src="https://i0.wp.com/parlamentodata.com/wp-content/uploads/2020/05/logo-udelar.png?ssl=1">
 
 # Proyecto final de Algoritmos Evolutivos
 
