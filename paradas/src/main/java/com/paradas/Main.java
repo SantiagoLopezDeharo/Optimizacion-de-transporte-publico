@@ -102,7 +102,7 @@ public class Main extends AbstractAlgorithmRunner {
         // Step 3: Create the Genetic Algorithm instance with parallel evaluator
         CustomAlgorithm<IntegerSolution> algorithm = new CustomAlgorithmBuilder<>(problem, crossover, mutation,
                 populationSize)
-                .setMaxEvaluations(60000)
+                .setMaxEvaluations(30000)
                 .setSelectionOperator(selection)
                 .setSolutionListEvaluator(new ParallelEvaluator<>())
                 .build();

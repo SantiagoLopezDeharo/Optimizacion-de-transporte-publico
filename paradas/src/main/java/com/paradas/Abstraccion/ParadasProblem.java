@@ -20,7 +20,7 @@ public class ParadasProblem extends AbstractIntegerProblem {
     private int maxDemanda = 0;
     private final List<String> indexToSegement;
     private final Map<String, Integer> segmentToIndex;
-    
+
     private final Map<String, Map<String, Integer>> bidirectionalDemand;
 
     public ParadasProblem(Map<String, Map<String, Integer>> matrix) {
@@ -31,20 +31,19 @@ public class ParadasProblem extends AbstractIntegerProblem {
 
         this.indexToSegement = new ArrayList<>();
         this.segmentToIndex = new HashMap<>();
-        
+
         this.bidirectionalDemand = new HashMap<>();
 
-        for (String origin : matrix.keySet())
-        {
+        for (String origin : matrix.keySet()) {
             int demandadx = 0;
             bidirectionalDemand.put(origin, new HashMap<>());
 
-            for (String destination : matrix.get(origin).keySet())
-            {
+            for (String destination : matrix.get(origin).keySet()) {
                 int demandValue = matrix.get(origin).get(destination);
-                
-                int demandaDestino = matrix.get(destination) != null && matrix.get(destination).containsKey(origin) 
-                    ? matrix.get(destination).get(origin) : 0;
+
+                int demandaDestino = matrix.get(destination) != null && matrix.get(destination).containsKey(origin)
+                        ? matrix.get(destination).get(origin)
+                        : 0;
                 bidirectionalDemand.get(origin).put(destination, demandValue + demandaDestino);
 
                 demandadx += demandValue;
@@ -57,24 +56,24 @@ public class ParadasProblem extends AbstractIntegerProblem {
 
         }
 
-        for (String d : demanda.keySet()) { 
+        for (String d : demanda.keySet()) {
             maxDemanda = demanda.get(d) != null && maxDemanda < demanda.get(d) ? demanda.get(d) : maxDemanda;
 
             indexToSegement.add(d);
-         
+
             segmentToIndex.put(d, indexToSegement.size() - 1);
         }
 
         int cantVariables = demanda.keySet().toArray().length;
-        
+
         numberOfObjectives(3);
 
         List<Integer> lowerLimit = new ArrayList<>(cantVariables);
         List<Integer> upperLimit = new ArrayList<>(cantVariables);
 
         for (int i = 0; i < cantVariables; i++) {
-            lowerLimit.add(0);  // Lower bound is 0
-            upperLimit.add(3);  // Upper bound is 3
+            lowerLimit.add(0); // Lower bound is 0
+            upperLimit.add(3); // Upper bound is 3
         }
 
         this.variableBounds(lowerLimit, upperLimit);
@@ -82,7 +81,7 @@ public class ParadasProblem extends AbstractIntegerProblem {
 
     @Override
     public String name() {
-      return "ParadasOptimasProblem";
+        return "ParadasOptimasProblem";
     }
 
     @Override
@@ -90,12 +89,13 @@ public class ParadasProblem extends AbstractIntegerProblem {
         return new DefaultIntegerSolution(this.variableBounds(), this.numberOfObjectives(), 0);
     }
 
-    // Function to determine if a given origin-destionation bus stop are present on the solution
+    // Function to determine if a given origin-destionation bus stop are present on
+    // the solution
     private int cubierto(IntegerSolution solution, String origen, String destino) {
         try {
-            return solution.variables().get(segmentToIndex.get(origen )) > 0 && solution.variables().get(segmentToIndex.get(destino)) > 0 ? 1 : 0;
-        }
-        catch (Exception e) {
+            return solution.variables().get(segmentToIndex.get(origen)) > 0
+                    && solution.variables().get(segmentToIndex.get(destino)) > 0 ? 1 : 0;
+        } catch (Exception e) {
             return 0;
         }
     }
@@ -108,18 +108,17 @@ public class ParadasProblem extends AbstractIntegerProblem {
                 f1 += bidirectionalDemand.get(origin).get(destination) * cubierto(solution, origin, destination);
             }
         }
-        
+
         double f2 = 0;
-        for ( int v = 0; v < numberOfVariables(); v++ )
+        for (int v = 0; v < numberOfVariables(); v++)
             f2 += solution.variables().get(v) == 0 ? 0 : 1;
-        
-        
+
         double f3 = 0;
-        for ( int v = 0; v < numberOfVariables(); v++ )
-            f3 += solution.variables().get(v) * ( 2 * (1 - ( ( demanda.get( indexToSegement.get(v) ) * 1.0 ) / maxDemanda)) - 1 )  ;  // A revisar
+        for (int v = 0; v < numberOfVariables(); v++)
+            f3 += solution.variables().get(v)
+                    * (2 * (1 - ((demanda.get(indexToSegement.get(v)) * 1.0) / maxDemanda)) - 1); // A revisar
 
-
-        solution.objectives()[0] = - f1;
+        solution.objectives()[0] = -f1;
         solution.objectives()[1] = f2;
         solution.objectives()[2] = f3;
 
@@ -131,33 +130,34 @@ public class ParadasProblem extends AbstractIntegerProblem {
         System.out.println("CODSEG,value");
         for (int v = 0; v < numberOfVariables(); v++)
             System.out.println(indexToSegement.get(v) + "," + String.valueOf(solution.variables().get(v)));
-        
+
         System.out.println("-----------------");
-        System.out.println("Objective value: ( " + solution.objectives()[0] + ", " + solution.objectives()[1] + ", " + solution.objectives()[2] + " )");
+        System.out.println("Objective value: ( " + solution.objectives()[0] + ", " + solution.objectives()[1] + ", "
+                + solution.objectives()[2] + " )");
     }
 
     public void saveResultToCSV(List<IntegerSolution> population) {
 
-    IntegerSolution solution = population.get(0);
+        IntegerSolution solution = population.get(0);
 
-    for (int i = 0; i < population.size(); i++)
-        if (solution.objectives()[0] > population.get(i).objectives()[0])
-            solution = population.get(i);
-    
-    String dateTime = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd_HH-mm-ss"));
-    String fileName = "results_" + dateTime + "_buenos_aires.csv";
+        for (int i = 0; i < population.size(); i++)
+            if (solution.objectives()[0] > population.get(i).objectives()[0])
+                solution = population.get(i);
 
-    try (FileWriter writer = new FileWriter(fileName)) {
-        writer.write("CODSEG,value\n");
+        String dateTime = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd_HH-mm-ss"));
+        String fileName = "results_" + dateTime + "_montevideo.csv";
 
-        for (int v = 0; v < numberOfVariables(); v++) {
-            writer.write(indexToSegement.get(v) + "," + solution.variables().get(v) + "\n");
+        try (FileWriter writer = new FileWriter(fileName)) {
+            writer.write("CODSEG,value\n");
+
+            for (int v = 0; v < numberOfVariables(); v++) {
+                writer.write(indexToSegement.get(v) + "," + solution.variables().get(v) + "\n");
+            }
+
+            System.out.println("Results saved to: " + fileName);
+        } catch (IOException e) {
+            System.err.println("An error occurred while saving the results: " + e.getMessage());
         }
-
-        System.out.println("Results saved to: " + fileName);
-    } catch (IOException e) {
-        System.err.println("An error occurred while saving the results: " + e.getMessage());
     }
-}
-        
+
 }
