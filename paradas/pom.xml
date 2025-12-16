@@ -9,8 +9,8 @@
     <version>1.0-SNAPSHOT</version>
 
     <properties>
-        <maven.compiler.source>17</maven.compiler.source>
-        <maven.compiler.target>17</maven.compiler.target>
+        <maven.compiler.source>25</maven.compiler.source>
+        <maven.compiler.target>25</maven.compiler.target>
     </properties>
 
     <build>
@@ -35,45 +35,35 @@
 
     <dependencies>
 
-        <dependency>
-            <groupId>org.uma.jmetal</groupId>
-            <artifactId>jmetal-experimental</artifactId>
-            <version>5.11</version>
-        </dependency>
 
 
-        <dependency>
-            <groupId>org.uma.jmetal</groupId>
-            <artifactId>jmetal-example</artifactId>
-            <version>5.11</version>
-        </dependency>
 
 
         <dependency>
             <groupId>org.uma.jmetal</groupId>
             <artifactId>jmetal-auto</artifactId>
-            <version>6.6</version>
+            <version>6.9.3</version>
         </dependency>
 
 
         <dependency>
             <groupId>org.uma.jmetal</groupId>
             <artifactId>jmetal-lab</artifactId>
-            <version>6.6</version>
+            <version>6.9.3</version>
         </dependency>
 
 
         <dependency>
             <groupId>org.uma.jmetal</groupId>
             <artifactId>jmetal-problem</artifactId>
-            <version>6.6</version>
+            <version>6.9.3</version>
         </dependency>
 
 
         <dependency>
             <groupId>org.uma.jmetal</groupId>
             <artifactId>jmetal</artifactId>
-            <version>6.6</version>
+            <version>6.9.3</version>
             <type>pom</type>
         </dependency>
 
@@ -81,28 +71,35 @@
         <dependency>
             <groupId>org.uma.jmetal</groupId>
             <artifactId>jmetal-parallel</artifactId>
-            <version>6.6</version>
+            <version>6.9.3</version>
         </dependency>
 
 
         <dependency>
             <groupId>org.uma.jmetal</groupId>
             <artifactId>jmetal-component</artifactId>
-            <version>6.6</version>
+            <version>6.9.3</version>
         </dependency>
 
 
         <dependency>
             <groupId>org.uma.jmetal</groupId>
             <artifactId>jmetal-algorithm</artifactId>
-            <version>6.6</version>
+            <version>6.9.3</version>
         </dependency>
 
 
         <dependency>
             <groupId>org.uma.jmetal</groupId>
             <artifactId>jmetal-core</artifactId>
-            <version>6.6</version>
+            <version>6.9.3</version>
+        </dependency>
+
+        <!-- Tablesaw for CSV reading -->
+        <dependency>
+            <groupId>tech.tablesaw</groupId>
+            <artifactId>tablesaw-core</artifactId>
+            <version>0.43.1</version>
         </dependency>
 
     </dependencies>

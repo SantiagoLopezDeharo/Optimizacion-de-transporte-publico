@@ -56,7 +56,7 @@ public class Main extends AbstractAlgorithmRunner {
 
                         // Add data to the map
                         dataMap.computeIfAbsent(origin, k -> new HashMap<>())
-                               .put(destination, passengers);
+                                .put(destination, passengers);
                     }
                 }
             }
@@ -67,12 +67,13 @@ public class Main extends AbstractAlgorithmRunner {
         return dataMap;
     }
 
-
-      public static void printFinalSolutionSet(List<? extends Solution<?>> population) {
+    public static void printFinalSolutionSet(List<? extends Solution<?>> population) {
         new SolutionListOutput(population)
-        .setVarFileOutputContext(new DefaultFileOutputContext("VAR" + JMetalRandom.getInstance().getSeed() + ".csv", ","))
-        .setFunFileOutputContext(new DefaultFileOutputContext("FUN"+ JMetalRandom.getInstance().getSeed() +".csv", ","))
-        .print();
+                .setVarFileOutputContext(
+                        new DefaultFileOutputContext("VAR" + JMetalRandom.getInstance().getSeed() + ".csv", ","))
+                .setFunFileOutputContext(
+                        new DefaultFileOutputContext("FUN" + JMetalRandom.getInstance().getSeed() + ".csv", ","))
+                .print();
 
         JMetalLogger.logger.info("Random seed: " + JMetalRandom.getInstance().getSeed());
         JMetalLogger.logger.info("Objectives values have been written to file FUN.tsv");
@@ -80,23 +81,25 @@ public class Main extends AbstractAlgorithmRunner {
     }
 
     public static void main(String[] args) {
-        Map<String, Map<String, Integer>> matrix = readCsvToMap("data.csv");
+        Map<String, Map<String, Integer>> matrix = readCsvToMap("data_bsas.csv");
 
         // Step 1: Create the problem
         Problem<IntegerSolution> problem = new ParadasProblem(matrix);
 
         // Step 2: Configure the operators
-        @SuppressWarnings({"rawtypes", "unchecked" })
+        @SuppressWarnings({ "rawtypes", "unchecked" })
         CrossoverOperator<IntegerSolution> crossover = new TwoPointCrossover(0.8); // 80% crossover probability
         MutationOperator<IntegerSolution> mutation = new IntegerPolynomialMutation(0.1, 5); // 1% mutation probability
-        SelectionOperator<List<IntegerSolution>, IntegerSolution> selection = new BinaryTournamentSelection<>(new RankingAndCrowdingDistanceComparator<>());
+        SelectionOperator<List<IntegerSolution>, IntegerSolution> selection = new BinaryTournamentSelection<>(
+                new RankingAndCrowdingDistanceComparator<>());
         int populationSize = 200;
 
         // Step 3: Create the Genetic Algorithm instance
-        CustomAlgorithm<IntegerSolution> algorithm = new CustomAlgorithmBuilder<>(problem, crossover, mutation, populationSize)
+        CustomAlgorithm<IntegerSolution> algorithm = new CustomAlgorithmBuilder<>(problem, crossover, mutation,
+                populationSize)
                 .setMaxEvaluations(30000)
                 .setSelectionOperator(selection)
-                //.setSolutionListEvaluator(new SequentialSolutionListEvaluator<>())
+                // .setSolutionListEvaluator(new SequentialSolutionListEvaluator<>())
                 .build();
 
         algorithm.run();
@@ -105,7 +108,7 @@ public class Main extends AbstractAlgorithmRunner {
 
         ((ParadasProblem) problem).saveResultToCSV(population);
 
-        ( (CustomAlgorithm<IntegerSolution>) algorithm).saveFitnessToCsv();
+        ((CustomAlgorithm<IntegerSolution>) algorithm).saveFitnessToCsv();
 
     }
 }
