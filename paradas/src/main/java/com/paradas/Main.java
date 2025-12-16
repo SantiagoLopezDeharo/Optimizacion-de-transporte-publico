@@ -82,7 +82,7 @@ public class Main extends AbstractAlgorithmRunner {
     }
 
     public static void main(String[] args) {
-        Map<String, Map<String, Integer>> matrix = readCsvToMap("data_bsas.csv");
+        Map<String, Map<String, Integer>> matrix = readCsvToMap("data_mvd.csv");
 
         // Step 1: Create the problem
         Problem<IntegerSolution> problem = new ParadasProblem(matrix);
@@ -102,9 +102,9 @@ public class Main extends AbstractAlgorithmRunner {
         // Step 3: Create the Genetic Algorithm instance with parallel evaluator
         CustomAlgorithm<IntegerSolution> algorithm = new CustomAlgorithmBuilder<>(problem, crossover, mutation,
                 populationSize)
-                .setMaxEvaluations(30000)
+                .setMaxEvaluations(60000)
                 .setSelectionOperator(selection)
-                .setSolutionListEvaluator(new ParallelEvaluator<>(threads))
+                .setSolutionListEvaluator(new ParallelEvaluator<>())
                 .build();
 
         algorithm.run();
