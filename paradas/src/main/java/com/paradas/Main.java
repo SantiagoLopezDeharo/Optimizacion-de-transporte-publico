@@ -27,6 +27,7 @@ import org.uma.jmetal.util.pseudorandom.JMetalRandom;
 import com.paradas.Abstraccion.ParadasProblem;
 import com.paradas.utils.CustomAlgorithm;
 import com.paradas.utils.CustomAlgorithmBuilder;
+import com.paradas.utils.ParallelEvaluator;
 
 import tech.tablesaw.io.csv.CsvReader;
 
@@ -94,12 +95,16 @@ public class Main extends AbstractAlgorithmRunner {
                 new RankingAndCrowdingDistanceComparator<>());
         int populationSize = 200;
 
-        // Step 3: Create the Genetic Algorithm instance
+        // Get available processors for parallel evaluation
+        int threads = Runtime.getRuntime().availableProcessors();
+        System.out.println("Using " + threads + " threads for parallel evaluation");
+
+        // Step 3: Create the Genetic Algorithm instance with parallel evaluator
         CustomAlgorithm<IntegerSolution> algorithm = new CustomAlgorithmBuilder<>(problem, crossover, mutation,
                 populationSize)
                 .setMaxEvaluations(30000)
                 .setSelectionOperator(selection)
-                // .setSolutionListEvaluator(new SequentialSolutionListEvaluator<>())
+                .setSolutionListEvaluator(new ParallelEvaluator<>(threads))
                 .build();
 
         algorithm.run();

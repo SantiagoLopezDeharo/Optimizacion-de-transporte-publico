@@ -1,0 +1,9 @@
+com\paradas\utils\ParallelEvaluator.class
+com\paradas\Greedy.class
+com\paradas\Main.class
+com\quality\QualityIndicators.class
+com\paradas\utils\FitnessTracker.class
+com\paradas\utils\CustomAlgorithm.class
+com\paradas\Abstraccion\ParadasProblem.class
+com\paradas\utils\CustomAlgorithmBuilder$NSGAIIVariant.class
+com\paradas\utils\CustomAlgorithmBuilder.class

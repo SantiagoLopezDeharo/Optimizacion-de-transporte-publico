@@ -18,8 +18,10 @@ public class ParadasProblem extends AbstractIntegerProblem {
     private final Map<String, Map<String, Integer>> matrix;
     private final Map<String, Integer> demanda;
     private int maxDemanda = 0;
-    private final List<String> indexToSegement; // We keep a list to know wich position in the individuals represent which segment
+    private final List<String> indexToSegement;
     private final Map<String, Integer> segmentToIndex;
+    
+    private final Map<String, Map<String, Integer>> bidirectionalDemand;
 
     public ParadasProblem(Map<String, Map<String, Integer>> matrix) {
 
@@ -29,14 +31,21 @@ public class ParadasProblem extends AbstractIntegerProblem {
 
         this.indexToSegement = new ArrayList<>();
         this.segmentToIndex = new HashMap<>();
+        
+        this.bidirectionalDemand = new HashMap<>();
 
         for (String origin : matrix.keySet())
         {
             int demandadx = 0;
+            bidirectionalDemand.put(origin, new HashMap<>());
 
             for (String destination : matrix.get(origin).keySet())
             {
                 int demandValue = matrix.get(origin).get(destination);
+                
+                int demandaDestino = matrix.get(destination) != null && matrix.get(destination).containsKey(origin) 
+                    ? matrix.get(destination).get(origin) : 0;
+                bidirectionalDemand.get(origin).put(destination, demandValue + demandaDestino);
 
                 demandadx += demandValue;
 
@@ -60,7 +69,6 @@ public class ParadasProblem extends AbstractIntegerProblem {
         
         numberOfObjectives(3);
 
-        // Set the lower and upper bounds for each variable (0 to 3 for each)
         List<Integer> lowerLimit = new ArrayList<>(cantVariables);
         List<Integer> upperLimit = new ArrayList<>(cantVariables);
 
@@ -95,22 +103,18 @@ public class ParadasProblem extends AbstractIntegerProblem {
     @Override
     public IntegerSolution evaluate(IntegerSolution solution) {
         double f1 = 0;
-        // Maximize coverage of the demand of each route
-        for (String origin : matrix.keySet())
-            for (String destination : matrix.get(origin).keySet())
-            {
-                int demandaDestino = matrix.get(destination) != null && matrix.get(destination).keySet().contains(origin) ? matrix.get(destination).get(origin) : 0;
-                f1 += ( matrix.get(origin).get(destination) + demandaDestino )* cubierto(solution, origin, destination); // A revisar
+        for (String origin : matrix.keySet()) {
+            for (String destination : matrix.get(origin).keySet()) {
+                f1 += bidirectionalDemand.get(origin).get(destination) * cubierto(solution, origin, destination);
             }
+        }
         
         double f2 = 0;
-        // Minimize amount of bus stops ( less bus stops would reduce the amount of time for the bus to go from A to B )
         for ( int v = 0; v < numberOfVariables(); v++ )
             f2 += solution.variables().get(v) == 0 ? 0 : 1;
         
         
         double f3 = 0;
-        // Minimize cost
         for ( int v = 0; v < numberOfVariables(); v++ )
             f3 += solution.variables().get(v) * ( 2 * (1 - ( ( demanda.get( indexToSegement.get(v) ) * 1.0 ) / maxDemanda)) - 1 )  ;  // A revisar
 
