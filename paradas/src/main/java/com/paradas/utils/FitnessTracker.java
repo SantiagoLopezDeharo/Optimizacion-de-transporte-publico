@@ -24,21 +24,22 @@ public class FitnessTracker<S extends Solution<?>> {
 
         history.add(max.objectives());
 
-        System.out.printf("Generation %d: Best = ( %.4f, %.4f, %.4f ) \n",
-                generation, max.objectives()[0], max.objectives()[1], max.objectives()[2]);
+        // Display fitness as positive value (0-10 scale)
+        System.out.printf("Generation %d: Best Fitness = %.4f (out of 1) \n",
+                generation, -max.objectives()[0]);
 
     }
 
     public void saveToCsv() {
         String dateTime = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd_HH-mm-ss"));
-        String fileName = "fitness_" + dateTime + "_montevideo.csv";
+        String fileName = "fitness_" + dateTime + ".csv";
 
         try (FileWriter writer = new FileWriter(fileName)) {
-            writer.write("generation,f1,f2,f3\n");
+            writer.write("generation,fitness\n");
 
             for (int v = 0; v < history.size(); v++) {
-                writer.write(
-                        (v + 1) + "," + history.get(v)[0] + "," + history.get(v)[1] + "," + history.get(v)[2] + "\n");
+                // Save as positive fitness value (0-10 scale)
+                writer.write((v + 1) + "," + (-history.get(v)[0]) + "\n");
             }
 
             System.out.println("Results from fitness saved to: " + fileName);

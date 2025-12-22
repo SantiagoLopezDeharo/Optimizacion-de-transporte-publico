@@ -1,3 +1,4 @@
+com\paradas\Main$ParetoResult.class
 com\paradas\utils\ParallelEvaluator.class
 com\paradas\Greedy.class
 com\paradas\Main.class
@@ -7,3 +8,4 @@ com\paradas\utils\CustomAlgorithm.class
 com\paradas\Abstraccion\ParadasProblem.class
 com\paradas\utils\CustomAlgorithmBuilder$NSGAIIVariant.class
 com\paradas\utils\CustomAlgorithmBuilder.class
+com\paradas\Main$WeightCombination.class
