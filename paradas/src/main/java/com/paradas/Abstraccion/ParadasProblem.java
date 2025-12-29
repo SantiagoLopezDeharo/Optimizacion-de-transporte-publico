@@ -29,21 +29,8 @@ public class ParadasProblem extends AbstractIntegerProblem {
     private double maxPossibleCost = 0;
     private double minPossibleCost = 0;
 
-    // Weights for linear aggregation (coverage should dominate)
-    private double weightCoverage = 0.65; // 65% - Most important
-    private double weightStops = 0.20; // 20% - Infrastructure cost
-    private double weightCost = 0.15; // 15% - Demand-based cost
-
     public ParadasProblem(Map<String, Map<String, Integer>> matrix) {
-        this(matrix, 0.65, 0.20, 0.15);
-    }
-
-    public ParadasProblem(Map<String, Map<String, Integer>> matrix, double weightCoverage, double weightStops, double weightCost) {
-
         this.matrix = matrix;
-        this.weightCoverage = weightCoverage;
-        this.weightStops = weightStops;
-        this.weightCost = weightCost;
 
         this.demanda = new HashMap<>();
 
@@ -105,7 +92,8 @@ public class ParadasProblem extends AbstractIntegerProblem {
             }
         }
 
-        numberOfObjectives(1); // Single objective now
+        // Multi-objective: 3 objectives (normalized components)
+        numberOfObjectives(3);
 
         List<Integer> lowerLimit = new ArrayList<>(cantVariables);
         List<Integer> upperLimit = new ArrayList<>(cantVariables);
@@ -141,27 +129,33 @@ public class ParadasProblem extends AbstractIntegerProblem {
 
     @Override
     public IntegerSolution evaluate(IntegerSolution solution) {
-        double[] objectives = calculateObjectives(solution);
-        double coverage = objectives[0];
-        double numStops = objectives[1];
-        double cost = objectives[2];
+        double[] normalized = calculateNormalizedObjectives(solution);
 
-        double normalizedCoverage = (coverage / maxPossibleCoverage);
-        double normalizedStops = ((maxPossibleStops - numStops) / maxPossibleStops); // Inverted: fewer stops =
-                                                                                            // better
-        double normalizedCost = ((maxPossibleCost - cost) / (maxPossibleCost - minPossibleCost)); // Inverted:
-                                                                                                         // lower cost =
-                                                                                                         // better
-
-        // Linear aggregation with weights (coverage dominates)
-        double fitness = weightCoverage * normalizedCoverage
-                + weightStops * normalizedStops
-                + weightCost * normalizedCost;
-
-        // Negate for minimization (NSGA-II minimizes by default)
-        solution.objectives()[0] = -fitness;
+        // NSGA-II minimizes: we negate so that higher normalized values are better
+        solution.objectives()[0] = -normalized[0]; // maximize coverage
+        solution.objectives()[1] = -normalized[1]; // maximize inverted stops
+        solution.objectives()[2] = -normalized[2]; // maximize inverted cost
 
         return solution;
+    }
+
+    /**
+     * Compute normalized objective components (all in [0,1], higher is better).
+     * Returns [normalizedCoverage, normalizedStops, normalizedCost]
+     */
+    private double[] calculateNormalizedObjectives(IntegerSolution solution) {
+        double[] raw = calculateObjectives(solution);
+        double coverage = raw[0];
+        double numStops = raw[1];
+        double cost = raw[2];
+
+        double normalizedCoverage = (maxPossibleCoverage == 0) ? 0.0 : (coverage / maxPossibleCoverage);
+        double normalizedStops = (maxPossibleStops == 0) ? 0.0 : ((maxPossibleStops - numStops) / maxPossibleStops);
+
+        double denomCost = (maxPossibleCost - minPossibleCost);
+        double normalizedCost = (denomCost == 0) ? 0.0 : ((maxPossibleCost - cost) / denomCost);
+
+        return new double[] { normalizedCoverage, normalizedStops, normalizedCost };
     }
 
     /**
@@ -201,16 +195,19 @@ public class ParadasProblem extends AbstractIntegerProblem {
             System.out.println(indexToSegement.get(v) + "," + String.valueOf(solution.variables().get(v)));
 
         System.out.println("-----------------");
-        System.out.println("Fitness value: " + (-solution.objectives()[0]) + " (out of 1)");
+        double[] raw = getOriginalObjectives(solution);
+        double[] normalized = getNormalizedObjectives(solution);
+        System.out.println(String.format("Coverage: %.2f | Stops: %.2f | Cost: %.2f", raw[0], raw[1], raw[2]));
+        System.out.println(String.format("Normalized (higher is better): coverage=%.4f, stops_inv=%.4f, cost_inv=%.4f",
+            normalized[0], normalized[1], normalized[2]));
     }
 
     public void saveResultToCSV(List<IntegerSolution> population) {
 
         IntegerSolution solution = population.get(0);
 
-        for (IntegerSolution i : population)
-            if (solution.objectives()[0] < i.objectives()[0])
-                solution = i;
+        // Best solution is not well-defined in multiobjective.
+        // Keep the first solution as a representative (non-dominated set is saved elsewhere).
 
         String dateTime = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd_HH-mm-ss"));
         String fileName = "results_" + dateTime + ".csv";
@@ -238,16 +235,21 @@ public class ParadasProblem extends AbstractIntegerProblem {
     }
 
     /**
+     * Get normalized objective components (higher is better).
+     * @param solution The solution
+     * @return Array [normalizedCoverage, normalizedStops, normalizedCost]
+     */
+    public double[] getNormalizedObjectives(IntegerSolution solution) {
+        return calculateNormalizedObjectives(solution);
+    }
+
+    /**
      * Get the best solution from population based on aggregated fitness
      */
     public IntegerSolution getBestSolution(List<IntegerSolution> population) {
-        IntegerSolution best = population.get(0);
-        for (IntegerSolution solution : population) {
-            if (solution.objectives()[0] < best.objectives()[0]) {
-                best = solution;
-            }
-        }
-        return best;
+        // Best solution is not well-defined in multiobjective.
+        // Returning the first element keeps backward compatibility for callers.
+        return population.get(0);
     }
 
 }
