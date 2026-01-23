@@ -27,7 +27,7 @@ public class CustomAlgorithm<S extends Solution<?>> extends AbstractGeneticAlgor
   protected int evaluations;
   protected Comparator<S> dominanceComparator;
 
-  final private FitnessTracker tracker = new FitnessTracker<>();
+  private final FitnessTracker tracker = new FitnessTracker<>();
 
   protected int matingPoolSize;
   protected int offspringPopulationSize;

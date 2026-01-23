@@ -69,7 +69,8 @@ public class Main extends AbstractAlgorithmRunner {
     /**
      * Save multi-objective Pareto approximation to CSV
      */
-    public static void saveParetoResultsMulti(List<IntegerSolution> solutions, ParadasProblem problem, String fileName) {
+    public static void saveParetoResultsMulti(List<IntegerSolution> solutions, ParadasProblem problem,
+            String fileName) {
         try (FileWriter writer = new FileWriter(fileName)) {
             writer.write("coverage,num_stops,cost,norm_coverage,norm_stops_inv,norm_cost_inv\n");
 
@@ -93,15 +94,14 @@ public class Main extends AbstractAlgorithmRunner {
         Map<String, Map<String, Integer>> matrix = readCsvToMap("data_mvd.csv");
 
         // Algorithm configuration
-        int populationSize = 300;
-        int maxEvaluations = 35000;
+        int populationSize = 200;
+        int maxEvaluations = 45000;
         double crossoverProbability = 0.9;
         double mutationProbability = 0.06;
         int mutationDistributionIndex = 6;
 
         // Generate timestamp for output files
         String timestamp = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd_HH-mm-ss"));
-
 
         System.out.println("\nRunning multi-objective optimization (3 objectives, no weights)...");
 
@@ -135,5 +135,7 @@ public class Main extends AbstractAlgorithmRunner {
         System.out.println("Non-dominated solutions: " + paretoSolutions.size());
         System.out.println("Results saved to: " + paretoFileName);
         System.out.println("========================================");
+
+        algorithm.saveFitnessToCsv();
     }
 }
